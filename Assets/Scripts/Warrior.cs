@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class Warrior : MonoBehaviour {
 
-    private Inventory armorSharedInventory;
-    private Inventory weaponSharedInventory;
+    private Inventory itemSharedInventory;
 
     // Use this for initialization
     void Start () {
-        armorSharedInventory = FindObjectOfType<InventoryManager>().ArmorSharedInventory;
-        weaponSharedInventory = FindObjectOfType<InventoryManager>().WeaponSharedInventory;
+        itemSharedInventory = FindObjectOfType<InventoryManager>().ItemSharedInventory;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 }

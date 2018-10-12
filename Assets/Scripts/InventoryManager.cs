@@ -1,44 +1,42 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour {
 
+    public static InventoryManager Instance;
+
     public GameObject InventorySlotPrefab;
-    public RectTransform ArmorsInventory;
-    public RectTransform WeaponsInventory;
+    public RectTransform ItemsInventory;
+    public Inventory ItemSharedInventory;
+    public List<Sprite> ArmorSprites;
+    public List<Sprite> WeaponSprites;
 
-
-    public Inventory ArmorSharedInventory;
-    public Inventory WeaponSharedInventory;
-
-    private int startingInventorySlots = 5;
+    private int startingInventorySlots = 4;
 
     void Awake()
     {
-        ArmorSharedInventory = new Inventory(new List<ItemsEnum>());
-        for (int i = 0; i < startingInventorySlots; i++)
+        if (Instance == null)
         {
-            AddInventorySlot(ArmorSharedInventory);
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
         }
 
-        WeaponSharedInventory = new Inventory(new List<ItemsEnum>());
+        ItemSharedInventory = new Inventory(new List<ItemsEnum>(), new List<Image>());
+
         for (int i = 0; i < startingInventorySlots; i++)
         {
-            AddInventorySlot(WeaponSharedInventory);
+            AddInventorySlot(ItemSharedInventory);
         }
     }
 
-    public void AddPhysicalInventorySlot(Inventory inventoryToExpand)
+    private void AddPhysicalInventorySlot(Inventory inventoryToExpand)
     {
-        if (inventoryToExpand == ArmorSharedInventory)
-        {
-            Instantiate(InventorySlotPrefab, ArmorsInventory);
-        }
-        else if (inventoryToExpand == WeaponSharedInventory)
-        {
-            Instantiate(InventorySlotPrefab, WeaponsInventory);
-        }
+        inventoryToExpand.InventoryItemsImages.Add(Instantiate(InventorySlotPrefab, ItemsInventory).GetComponentsInChildren<Image>()[1]);
     }
 
     public void AddInventorySlot(Inventory _inventoryToExpand)

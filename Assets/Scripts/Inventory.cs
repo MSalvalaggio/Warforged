@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory {
 
     public List<ItemsEnum> Items;
+    public List<Image> InventoryItemsImages;
 
-    public Inventory(List<ItemsEnum> newItems)
+    public Inventory(List<ItemsEnum> newItems, List<Image> newInventorySlots)
     {
         Items = newItems;
+        InventoryItemsImages = newInventorySlots;
     }
 
     public void AddLogicalInventorySlot(Inventory inventoryToExpand)
@@ -16,20 +19,17 @@ public class Inventory {
         inventoryToExpand.Items.Add(ItemsEnum.Null_Item);
     }
 
-    public void AddItemToAvailableInventory(Inventory firstInventoryToCheck, Inventory secondInventoryListToCheck, ItemsEnum itemToAddToFirstList, ItemsEnum itemToAddToSecondList)
+    public void AddItemToAvailableInventory(Inventory inventoryToCheck, ItemsEnum itemToAdd, Sprite spriteToUse)
     {
-        if (firstInventoryToCheck.Items.Contains(ItemsEnum.Null_Item))
+        for (int i = 0; i < Items.Count; i++)
         {
-            firstInventoryToCheck.Items[firstInventoryToCheck.Items.IndexOf(ItemsEnum.Null_Item)] = itemToAddToFirstList;
+            if (Items[i] == ItemsEnum.Null_Item && InventoryItemsImages[i].sprite == null)
+            {
+                inventoryToCheck.Items[i] = itemToAdd;
+                inventoryToCheck.InventoryItemsImages[i].sprite = spriteToUse;
+                return;
+            }
         }
-        else if (secondInventoryListToCheck.Items.Contains(ItemsEnum.Null_Item))
-        {
-            secondInventoryListToCheck.Items[secondInventoryListToCheck.Items.IndexOf(ItemsEnum.Null_Item)] = itemToAddToSecondList;
-        }
-        else
-        {
-            //TODO Messaggio di errore perché hai finito gli slot e devi potenziare
-            Debug.LogError("HAI FINITO GLI OGGETTI NELL'INVENTARIO! BASTA SPAMMARE!");
-        }
+        Debug.LogError("HAI FINITO GLI OGGETTI NELL'INVENTARIO! BASTA SPAMMARE!");
     }
 }

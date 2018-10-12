@@ -1,59 +1,63 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Blacksmith : MonoBehaviour {
+
+    public static bool IsClickerActive;
+
+    public Image Blacksmith_House;
+    private Animator Blacksmith_House_Animator;
 
     private int currentLevel = 1;
     private int currentClick;
     private int clickToReach = 5;
 
-    private Inventory armorSharedInventory;
-    private Inventory weaponSharedInventory;
+    private Inventory itemSharedInventory;
 
     // Use this for initialization
     void Start ()
     {
-        armorSharedInventory = FindObjectOfType<InventoryManager>().ArmorSharedInventory;
-        weaponSharedInventory = FindObjectOfType<InventoryManager>().WeaponSharedInventory;
+        IsClickerActive = true;
+        itemSharedInventory = FindObjectOfType<InventoryManager>().ItemSharedInventory;
+        Blacksmith_House_Animator = Blacksmith_House.GetComponent<Animator>();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && IsClickerActive)
         {
             // Suono del ferro sull'incudine
+            AnimateClickedBlacksmithHouse();
             currentClick++;
             if (currentClick >= clickToReach)
             {
                 currentClick = 0;
                 SmithItem();
-                //armorSharedInventory.Items.ForEach((element) => { print(element); });
-                //weaponSharedInventory.Items.ForEach((element) => { print(element); });
             }
         }
 	}
 
     public void SmithItem()
     {
-        
         switch (currentLevel)
         {
             case 1:
-                FillInventory(ItemsEnum.Armor_001, ItemsEnum.Weapon_001);
+                FillInventory(ItemsEnum.Armor_001, ItemsEnum.Weapon_001, InventoryManager.Instance.ArmorSprites[0], InventoryManager.Instance.WeaponSprites[0]);
                 break;
             case 2:
-                FillInventory(ItemsEnum.Armor_002, ItemsEnum.Weapon_002);
+                FillInventory(ItemsEnum.Armor_002, ItemsEnum.Weapon_002, InventoryManager.Instance.ArmorSprites[1], InventoryManager.Instance.WeaponSprites[1]);
                 break;
             case 3:
-                FillInventory(ItemsEnum.Armor_003, ItemsEnum.Weapon_003);
+                FillInventory(ItemsEnum.Armor_003, ItemsEnum.Weapon_003, InventoryManager.Instance.ArmorSprites[2], InventoryManager.Instance.WeaponSprites[2]);
                 break;
             case 4:
-                FillInventory(ItemsEnum.Armor_004, ItemsEnum.Weapon_004);
+                FillInventory(ItemsEnum.Armor_004, ItemsEnum.Weapon_004, InventoryManager.Instance.ArmorSprites[3], InventoryManager.Instance.WeaponSprites[3]);
                 break;
             case 5:
-                FillInventory(ItemsEnum.Armor_005, ItemsEnum.Weapon_005);
+                FillInventory(ItemsEnum.Armor_005, ItemsEnum.Weapon_005, InventoryManager.Instance.ArmorSprites[4], InventoryManager.Instance.WeaponSprites[4]);
                 break;
             case 6:
                 FillInventory(ItemsEnum.Armor_006, ItemsEnum.Weapon_006);
@@ -133,22 +137,30 @@ public class Blacksmith : MonoBehaviour {
         }
     }
 
-    public void FillInventory(ItemsEnum armorToAdd, ItemsEnum weaponsToAdd)
+    public void FillInventory(ItemsEnum armorToAdd, ItemsEnum weaponsToAdd, Sprite armorItemSprite = null, Sprite weaponItemSprite = null)
     {
         int tmpRngNum = Random.Range(0, 2);
 
         if (tmpRngNum == 0)
         {
-            armorSharedInventory.AddItemToAvailableInventory(armorSharedInventory, weaponSharedInventory, armorToAdd, weaponsToAdd);
+            itemSharedInventory.AddItemToAvailableInventory(itemSharedInventory, armorToAdd, armorItemSprite);
         }
         else if (tmpRngNum == 1)
         {
-            weaponSharedInventory.AddItemToAvailableInventory(weaponSharedInventory, armorSharedInventory, weaponsToAdd, armorToAdd);
+            itemSharedInventory.AddItemToAvailableInventory(itemSharedInventory, weaponsToAdd, weaponItemSprite);
         }
     }
 
     public void AddBlackSmithLevel()
     {
         currentLevel++;
+    }
+
+    public void AnimateClickedBlacksmithHouse()
+    {
+        if (IsClickerActive)
+        {
+            Blacksmith_House_Animator.Play("Blacksmith_House_Click_Animation");
+        }
     }
 }
