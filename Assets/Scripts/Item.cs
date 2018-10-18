@@ -19,7 +19,7 @@ public class Item : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        StartingPosition = transform.position;
+        StartingPosition = transform.localPosition;
 	}
 	
 	// Update is called once per frame
@@ -52,19 +52,19 @@ public class Item : MonoBehaviour {
                         {
                             //Riportare a null l'ItemType di quest'oggetto, riportarlo alla posizione iniziale e trasformare l'oggetto colliso in quello successivo
                         }
-                        else if (itemToCompare.ItemType != ItemsEnum.Null_Item)
+                        else
                         {
                             Vector2 tmpPosition = StartingPosition;
 
                             StartingPosition = itemToCompare.StartingPosition;
-                            transform.position = StartingPosition;
+                            transform.localPosition = StartingPosition;
                             itemToCompare.StartingPosition = tmpPosition;
-                            itemToCompare.transform.position = itemToCompare.StartingPosition;
+                            itemToCompare.transform.localPosition = itemToCompare.StartingPosition;
                         }
-                        else
-                        {
-                            transform.position = StartingPosition;
-                        }
+                    }
+                    else
+                    {
+                        transform.localPosition = StartingPosition;
                     }
                     break;
             }
